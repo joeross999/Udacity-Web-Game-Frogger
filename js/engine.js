@@ -80,7 +80,28 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+        setScore();
+    }
+
+    // This function sets the number on the scoreboard based on the players score
+    function setScore(){
+        document.getElementById("scoreboard").innerHTML =  score;
+    }
+
+    // This function checks to see if the player has made contact with an enemy.
+    // If they have the game is reset.
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy){
+            if (player.y === enemy.y){
+                enemyRight = enemy.x + 100;
+                playerLeft = player.x + 20;
+                playerRight = player.x + 80;
+                if(enemyRight > playerLeft && enemy.x < playerRight){
+                   reset();
+                }
+            }
+        });
     }
 
     /* This is called by the update function and loops through all of the
@@ -154,12 +175,16 @@ var Engine = (function(global) {
         player.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
+    // This function sets up the character and enemies.
+    // It is used to both initially set up the game as well
+    // as reset it when a collision has occured.
     function reset() {
-        // noop
+        allEnemies = [];
+        for(var i = 0; i < 3; i++){
+            allEnemies.push(new Enemy);
+        }
+        player = new Player;
+        score = 0;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
